@@ -1,5 +1,4 @@
-/* Flash multiple partitions 
-
+/* esp32-serial-flasher
 */
 
 #include <sys/param.h>
@@ -336,7 +335,7 @@ void app_main(void) {
     vTaskDelay(5000 / portTICK_PERIOD_MS);
 
     // flash binary configuration
-    safetycook_binaries_t bin;
+    target_binaries_t bin;
 
     const loader_esp32_config_t config = {
         .baud_rate = VALIDATE_UART_BAUD_RATE, // 115200
@@ -392,11 +391,11 @@ void app_main(void) {
                     set_icon(failed);
                 } else {
                     ESP_LOGI(TAG, "serial initialization completed");
-                    if (connect_to_slave(HIGHER_BAUDRATE) != ESP_LOADER_SUCCESS) {
-                        ESP_LOGE(TAG, "connect to slave failed");
+                    if (connect_to_target(HIGHER_BAUDRATE) != ESP_LOADER_SUCCESS) {
+                        ESP_LOGE(TAG, "connect to target failed");
                         set_icon(failed);
                     } else {
-                        ESP_LOGI(TAG, "connect to slave completed");
+                        ESP_LOGI(TAG, "connect to target completed");
                         get_binaries(esp_loader_get_target(), &bin);
                         if (flash_binary(bin.boot.data, bin.boot.size, bin.boot.addr) != ESP_LOADER_SUCCESS) {
                             ESP_LOGE(TAG, "flash binary 'boot' failed");

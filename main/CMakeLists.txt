@@ -1,0 +1,35 @@
+set(srcs main.c ../firmware_target/firmware_target.c)
+set(include_dirs . ../firmware_target)
+
+# idf_component_register(SRCS "app_main.cpp" "app_config.cpp" "app_housekeeping.cpp
+
+# target_link_libraries (esp-serial-flasher)
+
+if ("${IDF_VERSION_MAJOR}.${IDF_VERSION_MINOR}" VERSION_GREATER "4.0")
+#    idf_component_register(SRCS ${srcs} "u8g2_esp32_hal.c" "u8g2_esp32_hal.h"
+#                           INCLUDE_DIRS ${include_dirs} ".")
+#    idf_component_register(SRCS ${srcs} "main.cpp" 
+#                           INCLUDE_DIRS ${include_dirs} ".")
+
+
+
+    idf_component_register(SRCS ${srcs} "main.c" 
+                           INCLUDE_DIRS ${include_dirs} ".")
+#                           REQUIRES esp-serial-flasher u8g2 esp-u8g2-hal esp32-button)
+
+    set(target ${COMPONENT_LIB})
+else()
+    # remove when dropping IDF 3.3 support
+    set(COMPONENT_SRCS ${srcs})
+    set(COMPONENT_ADD_INCLUDEDIRS ${include_dirs})
+    register_component()
+    set(target ${COMPONENT_TARGET})
+endif()
+
+# Embed binaries into the app.
+# In ESP-IDF this can also be done using EMBED_FILES option of idf_component_register.
+# Here an external tool is used to make file embedding similar with other ports.
+include(${CMAKE_CURRENT_LIST_DIR}/../firmware_target/bin2array.cmake)
+create_resources(${CMAKE_CURRENT_LIST_DIR}/../firmware_target/bin ${CMAKE_BINARY_DIR}/binaries.c)
+set_property(SOURCE ${CMAKE_BINARY_DIR}/binaries.c PROPERTY GENERATED 1)
+target_sources(${target} PRIVATE ${CMAKE_BINARY_DIR}/binaries.c)

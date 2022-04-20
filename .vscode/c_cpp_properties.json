@@ -1,0 +1,54 @@
+{
+    "env": {
+        "defaultIncludePath": [
+            "${env:IDF_PATH}/components/**",
+            "${workspaceFolder}/main/**",
+            "${workspaceFolder}/components/**",
+            "${workspaceFolder}/build/config/*",
+            "${env:IDF_PATH}/examples/common_components/protocol_examples_common/**"
+        ],
+        "defaultBrowsePath": [
+            "${env:IDF_PATH}/components",
+            "${workspaceFolder}/main",
+            "${workspaceFolder}/components",
+            "${workspaceFolder}/build/config",
+            "${env:IDF_PATH}/examples/common_components/protocol_examples_common"
+        ]
+    },
+    "configurations": [
+        {
+            "name": "ESP32",
+            "includePath": [
+                "${defaultIncludePath}"
+            ],
+            "browse": {
+                "path": [
+                    "${defaultBrowsePath}"
+                ],
+                "limitSymbolsToIncludedHeaders": false
+            },
+           // "compilerPath": "C:/Users/Maikel/.espressif/tools/xtensa-esp32-elf/esp-2021r2-patch2-8.4.0/xtensa-esp32-elf/bin/xtensa-esp32-elf-gcc.exe",
+
+            "compilerPath": "C:/Users/Machiel/.espressif/tools/xtensa-esp32-elf/esp-2021r2-patch2-8.4.0/xtensa-esp32-elf/bin/xtensa-esp32-elf-gcc.exe",
+            "cStandard": "c11",
+            "cppStandard": "c++17",
+            "compileCommands": "${workspaceFolder}/build/compile_commands.json"
+        },
+        {
+            "name": "ESP8266",
+            "includePath": [
+                "${defaultIncludePath}"
+            ],
+            "browse": {
+                "path": [
+                    "${defaultBrowsePath}"
+                ],
+                "limitSymbolsToIncludedHeaders": false
+            },
+            "cStandard": "c11",
+            "cppStandard": "c++11",
+            "compileCommands": "${workspaceFolder}/build/compile_commands.json"
+        }
+    ],
+    "version": 4
+}

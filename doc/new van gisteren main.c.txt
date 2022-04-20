@@ -1,0 +1,307 @@
+/* Flash multiple partitions example
+
+   This example code is in the Public Domain (or CC0 licensed, at your option.)
+
+   Unless required by applicable law or agreed to in writing, this
+   software is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+   CONDITIONS OF ANY KIND, either express or implied.
+*/
+
+#include <sys/param.h>
+#include <string.h>
+#include "main.h"
+#include "esp_err.h"
+// #define LOG_LOCAL_LEVEL ESP_LOG_VERBOSE
+#include "esp_log.h"
+#include "driver/uart.h"
+#include "driver/gpio.h"
+#include "esp32_port.h"
+#include "esp_loader.h"
+#include "firmware_slave.h"
+#include "button.h"
+#include "ssd1306.h"
+#include "ssd1306_draw.h"
+#include "ssd1306_font.h"
+#include "ssd1306_default_if.h"
+
+static const int I2CDisplayAddress = SSD1306_I2C_ADDRESS;
+static const int I2CDisplayWidth = SSD1306_WIDTH;
+static const int I2CDisplayHeight = SSD1306_HEIGHT;
+static const int I2CResetPin = SSD1306_I2C_RESET_PIN;
+struct SSD1306_Device I2CDisplay;
+
+/*
+extern "C" {
+	void app_main(void);
+}*/
+
+
+volatile bool _toggle_validate_slave_software_in_process = true;
+volatile bool _toggle_validate_slave_software_validated  = false;
+
+void SetupDemo( struct SSD1306_Device* DisplayHandle, const struct SSD1306_FontDef* Font );
+void SayHello( struct SSD1306_Device* DisplayHandle, const char* HelloText );
+
+/*
+enum cookerFlashState {
+  cfsINIT,
+  cfsFLASHING,
+  cfsERROR,
+  cfsSOFTWARE_VALIDATED,
+  cfsUNKNOWN
+};
+
+cookerFlashState _flashState;
+
+*/
+
+
+
+bool DefaultBusInit( void ) {
+    assert( SSD1306_I2CMasterInitDefault( ) == true );
+    assert( SSD1306_I2CMasterAttachDisplayDefault( &I2CDisplay, I2CDisplayWidth, I2CDisplayHeight, I2CDisplayAddress, I2CResetPin ) == true );
+
+    return true;
+}
+
+void SetupDemo( struct SSD1306_Device* DisplayHandle, const struct SSD1306_FontDef* Font ) {
+    SSD1306_Clear( DisplayHandle, SSD_COLOR_BLACK );
+    SSD1306_SetFont( DisplayHandle, Font );
+}
+
+void SayHello( struct SSD1306_Device* DisplayHandle, const char* HelloText ) {
+    SSD1306_FontDrawAnchoredString( DisplayHandle, TextAnchor_Center, HelloText, SSD_COLOR_WHITE );
+    SSD1306_Update( DisplayHandle );
+}
+
+static void validate_task(void *arg) {
+	unsigned long REQUEST_FOR_VERSION_INTERVAL = 1000; // ms example: 1000 = 1 sec.
+    unsigned long RESPONSE_FOR_VERSION_TIMEOUT =  200; // ms example: 1000 = 1 sec.
+	unsigned long lastVersionRequestTime = 0;
+    unsigned long lastVersionResponseTime = 0;
+
+    bool version_request_sent = false;
+    bool timeout_timer_active = false;
+   // bool last_toggle_validate_slave_software_in_process = _toggle_validate_slave_software_in_process;
+
+    /* Configure parameters of an UART driver,
+     * communication pins and install the driver */
+    uart_config_t uart_config = {
+        .baud_rate = VALIDATE_UART_BAUD_RATE,
+        .data_bits = UART_DATA_8_BITS,
+        .parity    = UART_PARITY_DISABLE,
+        .stop_bits = UART_STOP_BITS_1,
+        .flow_ctrl = UART_HW_FLOWCTRL_DISABLE,
+        .source_clk = UART_SCLK_APB,
+    };
+    int intr_alloc_flags = 0;
+
+#if CONFIG_UART_ISR_IN_IRAM
+    intr_alloc_flags = ESP_INTR_FLAG_IRAM;
+#endif
+
+
+    ESP_ERROR_CHECK(uart_driver_install(VALIDATE_UART_PORT_NUM, BUF_SIZE * 2, 0, 0, NULL, intr_alloc_flags));
+    ESP_ERROR_CHECK(uart_param_config(VALIDATE_UART_PORT_NUM, &uart_config));
+    ESP_ERROR_CHECK(uart_set_pin(VALIDATE_UART_PORT_NUM, SLAVE_TX_RX, SLAVE_RX_TX, VALIDATE_TEST_RTS, VALIDATE_TEST_CTS));
+
+    // Configure a temporary buffer for the incoming data
+    uint8_t *data = (uint8_t *) malloc(BUF_SIZE);
+
+    while (1) {
+        if(_toggle_validate_slave_software_in_process == true) {
+
+/*
+            if(last_toggle_validate_slave_software_in_process != _toggle_validate_slave_software_in_process) {
+                last_toggle_validate_slave_software_in_process = _toggle_validate_slave_software_in_process;
+                printf("install UART driver");
+                ESP_ERROR_CHECK(uart_driver_install(ECHO_UART_PORT_NUM, BUF_SIZE * 2, 0, 0, NULL, intr_alloc_flags));
+                ESP_ERROR_CHECK(uart_param_config(ECHO_UART_PORT_NUM, &uart_config));
+                ESP_ERROR_CHECK(uart_set_pin(ECHO_UART_PORT_NUM, SLAVE_TX_RX, SLAVE_RX_TX, ECHO_TEST_RTS, ECHO_TEST_CTS));
+            }*/
+
+            // Read data from the UART
+            int len = uart_read_bytes(VALIDATE_UART_PORT_NUM, data, BUF_SIZE, 20 / portTICK_RATE_MS);
+
+            if(len > 0) {
+                if(version_request_sent == true) {
+                    version_request_sent = false;
+                    if (memcmp ( data, SAFETYCOOK_SOFTWARE_VERSION, strlen(SAFETYCOOK_SOFTWARE_VERSION) ) == 0) {
+                        if(_toggle_validate_slave_software_validated == false) 
+                        printf ("equal version\n");
+                        _toggle_validate_slave_software_validated = true;
+                    }else {
+                        if(_toggle_validate_slave_software_validated == true) 
+                        printf ("unknown version '%.*s'\n", strlen(SAFETYCOOK_SOFTWARE_VERSION), data);
+                        _toggle_validate_slave_software_validated = false;
+                    }
+                    timeout_timer_active = false;
+                    
+                }else if(len > 5){ // slave is sending UART information, ignore input and wait until 
+                    // printf("reset 'version request' timer (length: %i)\n", len);
+                    lastVersionRequestTime = esp_timer_get_time() / 1000ULL; // restart timer
+                    // printf("%.*s",len, data);
+                    if(_toggle_validate_slave_software_validated == true) printf ("noise, version unknown\n");
+                    _toggle_validate_slave_software_validated = false;
+                }
+            } 
+
+            if((esp_timer_get_time() / 1000ULL) - lastVersionRequestTime >= REQUEST_FOR_VERSION_INTERVAL) {
+                lastVersionRequestTime += REQUEST_FOR_VERSION_INTERVAL; // reset timer
+    
+                if(version_request_sent == false) {
+                    version_request_sent = true;
+                    // printf("request version information -> ");
+                    // Write data back to the UART
+                    uart_write_bytes(VALIDATE_UART_PORT_NUM, "version\n",strlen("version\n"));
+                    lastVersionResponseTime = esp_timer_get_time() / 1000ULL; // restart timer
+                    timeout_timer_active = true;
+                }else {
+                    if(_toggle_validate_slave_software_validated == true) 
+                   printf ("time-out (4 seconds)\n");
+                    _toggle_validate_slave_software_validated = false;
+                    timeout_timer_active = false;
+                    version_request_sent = false;
+                }
+            } // timer, request for version 
+
+            if(timeout_timer_active == true && (esp_timer_get_time() / 1000ULL) - lastVersionResponseTime >= RESPONSE_FOR_VERSION_TIMEOUT) {
+                timeout_timer_active = false;
+                if(_toggle_validate_slave_software_validated == true) 
+                printf ("time-out\n");
+                _toggle_validate_slave_software_validated = false;
+            } // timer, response for version 
+        }else {
+            
+            /*
+            if(last_toggle_validate_slave_software_in_process != _toggle_validate_slave_software_in_process) {
+                last_toggle_validate_slave_software_in_process = _toggle_validate_slave_software_in_process;
+                printf("delete UART driver");
+                ESP_ERROR_CHECK(uart_driver_delete(ECHO_UART_PORT_NUM));
+            }
+            */
+
+            vTaskDelay(500 / portTICK_PERIOD_MS);
+
+        }
+    } // endless loop
+}
+
+void app_main(void)
+{
+    printf("Start ...\n" );
+
+   // int a;
+
+    // bool toggle = false;
+    
+    gpio_config_t io_conf; // Fix issue with GPIO 14 (RED LED) didn't work well
+    io_conf.intr_type = GPIO_INTR_DISABLE; //disable interrupt
+    io_conf.mode = GPIO_MODE_OUTPUT;       //set as output mode
+    io_conf.pin_bit_mask = GPIO_OUTPUT_PIN_SEL; //bit mask of the pins that you want to set, e.g.GPIO14/27
+    io_conf.pull_down_en = (gpio_pulldown_t) 0;//disable pull-down mode
+    io_conf.pull_up_en = (gpio_pullup_t)0;  //disable pull-up mode
+    gpio_config(&io_conf);   //configure GPIO with the given settings
+
+    gpio_set_direction((gpio_num_t) SSD1306_PWR, GPIO_MODE_OUTPUT);
+    gpio_set_direction((gpio_num_t) SSD1306_GND, GPIO_MODE_OUTPUT);
+    gpio_set_direction((gpio_num_t) RED_LED_PWR, GPIO_MODE_OUTPUT);
+    gpio_set_direction((gpio_num_t) RED_LED_GND, GPIO_MODE_OUTPUT);
+    gpio_set_direction((gpio_num_t) GREEN_LED_PWR, GPIO_MODE_OUTPUT);
+    gpio_set_direction((gpio_num_t) GREEN_LED_GND, GPIO_MODE_OUTPUT);
+    gpio_set_level((gpio_num_t) SSD1306_PWR, 1); // +3.3V
+    gpio_set_level((gpio_num_t) SSD1306_GND, 0); // GND
+    
+    gpio_set_level((gpio_num_t) RED_LED_PWR, 0);
+    gpio_set_level((gpio_num_t) RED_LED_GND, 0);
+    
+    // gpio_set_level(RED_LED_GND, 0); // GND
+
+    gpio_set_level((gpio_num_t) GREEN_LED_PWR, 0);
+    gpio_set_level((gpio_num_t) GREEN_LED_GND, 0); // GND
+
+
+    if ( DefaultBusInit( ) == true ) {
+        printf( "BUS Init lookin good...\n" );
+        printf( "Drawing.\n" );
+        SetupDemo( &I2CDisplay, &Font_droid_sans_fallback_24x28 );
+        SayHello( &I2CDisplay, "READY" );
+        printf( "Done!\n" );
+    }    
+
+    // flash binary configuration
+    example_binaries_t bin;
+
+    const loader_esp32_config_t config = {
+        .baud_rate = 115200,
+        .uart_port = UART_NUM_1,
+        .uart_rx_pin =  SLAVE_RX_TX, //GPIO_NUM_35, // GPIO_NUM_23,  GPIO_NUM_5,
+        .uart_tx_pin =  SLAVE_TX_RX, // GPIO_NUM_25, // GPIO_NUM_22,  GPIO_NUM_4,
+        .reset_trigger_pin =  SLAVE_RESET, // GPIO_NUM_33, // GPIO_NUM_25,
+        .gpio0_trigger_pin =  SLAVE_IO0 // GPIO_NUM_32, // GPIO_NUM_26,
+    };
+
+
+    button_event_t ev;
+    QueueHandle_t button_events = button_init(PIN_BIT(BUTTON_1));
+
+
+    xTaskCreate(validate_task, "validate task", VALIDATE_TASK_STACK_SIZE, NULL, 10, NULL);
+    
+    if (loader_port_esp32_init(&config) != ESP_LOADER_SUCCESS) {
+        ESP_LOGE("example", "serial initialization failed");
+        SSD1306_Clear( &I2CDisplay, SSD_COLOR_BLACK );
+        SayHello( &I2CDisplay, "ERROR 01" );
+        return;
+    }
+
+    while (true) {
+
+        if(_toggle_validate_slave_software_validated == true) {
+             gpio_set_level((gpio_num_t) GREEN_LED_PWR, 1);
+        }else{
+             gpio_set_level((gpio_num_t) GREEN_LED_PWR, 0);
+        }
+
+        if (xQueueReceive(button_events, &ev, 1000/portTICK_PERIOD_MS)) {
+            if ((ev.pin == BUTTON_1) && (ev.event == BUTTON_DOWN)) {
+
+                ESP_LOGE("app_main", "button pressed");
+
+                // toggle = ! toggle;
+
+                // gpio_set_level(GREEN_LED_PWR, toggle ? 1 : 0);
+                gpio_set_level((gpio_num_t) RED_LED_PWR, 1);
+                gpio_set_level((gpio_num_t) GREEN_LED_PWR, 0);
+                _toggle_validate_slave_software_in_process = false;
+
+                SSD1306_Clear( &I2CDisplay, SSD_COLOR_BLACK );
+                SayHello( &I2CDisplay, "FLASHING" );
+
+    //            if (loader_port_esp32_init(&config) != ESP_LOADER_SUCCESS) {
+  //                  ESP_LOGE("example", "serial initialization failed");
+//                }else {
+                    ESP_LOGE("example", "serial initialization successful");        
+                    if (connect_to_target(HIGHER_BAUDRATE) == ESP_LOADER_SUCCESS) {
+
+                        get_binaries(esp_loader_get_target(), &bin);
+                        flash_binary(bin.boot.data, bin.boot.size, bin.boot.addr);
+                        flash_binary(bin.part.data, bin.part.size, bin.part.addr);
+                        flash_binary(bin.app.data,  bin.app.size,  bin.app.addr);
+                        
+#ifdef SAFETYCOOK_ROM
+                        flash_binary(bin.ota.data,  bin.ota.size,  bin.ota.addr);
+#endif
+                    }
+              //  }
+
+                SSD1306_Clear( &I2CDisplay, SSD_COLOR_BLACK );
+                SayHello( &I2CDisplay, "READY" );
+                gpio_set_level((gpio_num_t) RED_LED_PWR, 0);
+                
+                _toggle_validate_slave_software_in_process = true;
+                
+            }
+        }
+    }
+}

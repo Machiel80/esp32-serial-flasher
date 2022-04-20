@@ -1,0 +1,24 @@
+{
+    "idf.adapterTargetName": "esp32",
+    "idf.flashType": "UART",
+    "idf.portWin": "COM4",
+    "files.associations": {
+        "button.h": "c",
+        "example_common.h": "c",
+        "esp32_port.h": "c",
+        "gpio.h": "c",
+        "ssd1306.h": "c",
+        "main.h": "c",
+        "ssd1306_default_if.h": "c",
+        "uart.h": "c",
+        "icons2.h": "c",
+        "icons.h": "c",
+        "*.inc": "c",
+        "esp_loader.h": "c",
+        "array": "c",
+        "vector": "c",
+        "xstring": "c",
+        "xutility": "c",
+        "xiosbase": "c"
+    }
+}

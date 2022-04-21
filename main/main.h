@@ -1,7 +1,7 @@
 
 
 #define SAFETYCOOK_ROM
-#define FLASHER_SOFTWARE_VERSION      "20220407"
+#define FLASHER_SOFTWARE_VERSION      "20220421"
 
 #define SAFETYCOOK_SOFTWARE_VERSION   "20220420"           // 1-4
 #define SAFETYCOOK_BIN      safetycook_20220420_bin        // 2-4

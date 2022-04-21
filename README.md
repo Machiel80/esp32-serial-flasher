@@ -1,8 +1,8 @@
-# Esp32 serial flasher
+# Esp32 serial flasher (FlashBox)
 
 ## Overview
 
-Esp32 (host) to Esp32 (target) serial flasher, how to flash the ESP32 target from this (host) MCU/ESP32 using esp_serial_flash component API.
+Esp32 (host) to Esp32 (target) serial flasher, how to flash the ESP32 target from this (host) using esp_serial_flash component API.
 Binaries to be flashed from host MCU to the target Espressif SoC can be found in `firmware_target` folder and are converted into C-array during build process.
 
 Following steps are performed in order to re-program target's memory:

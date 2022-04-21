@@ -1,3 +1,4 @@
 Version esp32-serial-flasher
 
-20220420:     Initial version
+20220420: Initial version
+20220421: Code clean and add documentation

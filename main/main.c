@@ -242,8 +242,8 @@ void app_main(void) {
     u8g2_SetFont(&_u8g2, u8g2_font_fub20_tn);
     u8g2_DrawStr(&_u8g2, 2, 41, SAFETYCOOK_SOFTWARE_VERSION);
     u8g2_SetFont(&_u8g2, u8g2_font_6x13_tf);
-    u8g2_DrawStr(&_u8g2, 2, 63, "flasher:");
-    u8g2_DrawStr(&_u8g2, 52, 64, FLASHER_SOFTWARE_VERSION);
+    u8g2_DrawStr(&_u8g2, 2, 63, "FlashBox:");
+    u8g2_DrawStr(&_u8g2, 60, 63, FLASHER_SOFTWARE_VERSION);
 
     u8g2_SendBuffer(&_u8g2);
     vTaskDelay(5000 / portTICK_PERIOD_MS);

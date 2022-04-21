@@ -1,4 +1,6 @@
-/* esp32-serial-flasher
+/* 
+    name: Esp32 serial flasher
+    from: M.Mastenbroek (github.com/Machiel80)
 */
 
 #include <sys/param.h>
@@ -21,52 +23,16 @@
 	void app_main(void);
 } */
 
-
-enum cookerFlashState {
-  cfsINIT,
-  cfsFLASHING,
-  cfsERROR,
-  cfsSOFTWARE_VALIDATED,
-  cfsUNKNOWN
-};
-
-enum cookerFirmwareVersion {
-  cfvVALIDATED,
-  cfvAMISS,
-  cfvUNKNOWN
-};
-
-enum icon {
-    completed
-   ,failed
-   ,progress_1_3
-   ,progress_2_3
-   ,progress_3_3
-   ,open
-};
-
 volatile bool _toggle_validate_slave_software_task_enabled   = true;
 volatile bool _toggle_result_validate_slave_software_changed = true;
 u8g2_t _u8g2;  // a structure which will contain all the data for one display
-enum cookerFlashState      _flash_state      = cfsUNKNOWN;
 enum cookerFirmwareVersion _firmware_version = cfvUNKNOWN;
-
 
 static void change_request_validate_software(const char* note, enum cookerFirmwareVersion firmware_version_state) {
     const char* TAG = "software changed";
-    // static bool toggle_validate_slave_software_task_enabled = true;
-    esp_log_level_set(TAG, ESP_LOG_DEBUG);
+    esp_log_level_set(TAG, ESP_LOG_INFO);
 
     ESP_LOGD(TAG,"request '%s'",note);
-    
-    /*
-    if (toggle_validate_slave_software_task_enabled != _toggle_validate_slave_software_task_enabled) {
-      if(_toggle_validate_slave_software_task_enabled) {
-          ESP_LOGD(TAG,"validate task re-enabled");
-      }else {
-          ESP_LOGD(TAG,"validate task stopped");
-      }
-    }*/
 
     if(firmware_version_state != _firmware_version ) {
         _firmware_version = firmware_version_state;
@@ -78,13 +44,12 @@ static void change_request_validate_software(const char* note, enum cookerFirmwa
         else
             ESP_LOGD(TAG,"state changed '%s' to UNKNOWN",note);
     }
-
 }
 
 static void slave_software_validate_task(void *arg) {
     static const char* TAG = "validate software";
     static bool task_restart = false;
-    esp_log_level_set(TAG, ESP_LOG_DEBUG);
+    esp_log_level_set(TAG, ESP_LOG_INFO);
     
     unsigned long REQUEST_FOR_VERSION_INTERVAL = 1000; // ms example: 1000 = 1 sec.
     unsigned long RESPONSE_FOR_VERSION_TIMEOUT =  200; // ms example: 1000 = 1 sec.
@@ -111,7 +76,6 @@ static void slave_software_validate_task(void *arg) {
     intr_alloc_flags = ESP_INTR_FLAG_IRAM;
 #endif
 
-
     ESP_ERROR_CHECK(uart_driver_install(VALIDATE_UART_PORT_NUM, BUF_SIZE * 2, 0, 0, NULL, intr_alloc_flags));
     ESP_ERROR_CHECK(uart_param_config(VALIDATE_UART_PORT_NUM, &uart_config));
     ESP_ERROR_CHECK(uart_set_pin(VALIDATE_UART_PORT_NUM, VALIDATE_TEST_TXD, VALIDATE_TEST_RXD, VALIDATE_TEST_RTS, VALIDATE_TEST_CTS));
@@ -134,20 +98,7 @@ static void slave_software_validate_task(void *arg) {
                 ESP_LOGI(TAG, "reset slave");
                 esp_loader_reset_target();
                 vTaskDelay(100 / portTICK_PERIOD_MS);
-
-
             }
-
-           /* ESP_LOGI(TAG,"task started");
-*/
-/*
-            if(last_toggle_validate_slave_software_in_process != _toggle_validate_slave_software_in_process) {
-                last_toggle_validate_slave_software_in_process = _toggle_validate_slave_software_in_process;
-                printf("install UART driver");
-                ESP_ERROR_CHECK(uart_driver_install(ECHO_UART_PORT_NUM, BUF_SIZE * 2, 0, 0, NULL, intr_alloc_flags));
-                ESP_ERROR_CHECK(uart_param_config(ECHO_UART_PORT_NUM, &uart_config));
-                ESP_ERROR_CHECK(uart_set_pin(ECHO_UART_PORT_NUM, SLAVE_TX_RX, SLAVE_RX_TX, ECHO_TEST_RTS, ECHO_TEST_CTS));
-            }*/
 
             // Read data from the UART
             int len = uart_read_bytes(VALIDATE_UART_PORT_NUM, data, BUF_SIZE, 20 / portTICK_RATE_MS);
@@ -161,16 +112,12 @@ static void slave_software_validate_task(void *arg) {
                         change_request_validate_software("unknown version", cfvAMISS);
                     }
                     timeout_timer_active = false;
-                    
-                }else if(len > 5){ // slave is sending UART information, ignore input and wait until 
-                    // printf("reset 'version request' timer (length: %i)\n", len);
+                } else if(len > 5) { // slave is sending UART information, ignore input and wait until 
                     lastVersionRequestTime = esp_timer_get_time() / 1000ULL; // restart timer
-                    // printf("%.*s",len, data);
                     change_request_validate_software("noise, version unknown", cfvUNKNOWN);
                 }
-
                 // ESP_LOGI(TAG,"%.*s",len, data);
-                printf("%.*s",len, data);
+                // printf("%.*s",len, data);
             } 
 
             if((esp_timer_get_time() / 1000ULL) - lastVersionRequestTime >= REQUEST_FOR_VERSION_INTERVAL) {
@@ -178,7 +125,6 @@ static void slave_software_validate_task(void *arg) {
     
                 if(version_request_sent == false) {
                     version_request_sent = true;
-                    // printf("request version information -> ");
                     ESP_LOGD(TAG,"send UART request for version information");
                     // Write data back to the UART
                     uart_write_bytes(VALIDATE_UART_PORT_NUM, "version\n",strlen("version\n"));
@@ -194,34 +140,19 @@ static void slave_software_validate_task(void *arg) {
             if(timeout_timer_active == true && (esp_timer_get_time() / 1000ULL) - lastVersionResponseTime >= RESPONSE_FOR_VERSION_TIMEOUT) {
                 timeout_timer_active = false;
                 change_request_validate_software("time-out", cfvAMISS);
-
             } // timer, response for version 
         }else {
             
-            /*
-            if(last_toggle_validate_slave_software_in_process != _toggle_validate_slave_software_in_process) {
-                last_toggle_validate_slave_software_in_process = _toggle_validate_slave_software_in_process;
-                printf("delete UART driver");
-                ESP_ERROR_CHECK(uart_driver_delete(ECHO_UART_PORT_NUM));
-            }
-            */
-
-
             if(task_restart == false) {
                 task_restart = true;
                 ESP_LOGD(TAG,"task pauze, UART driver turned-off");
                 uart_driver_delete(VALIDATE_UART_PORT_NUM);
                 change_request_validate_software("task turned off",cfvUNKNOWN);
             }
-
             vTaskDelay(200 / portTICK_PERIOD_MS);
-
         }
     } // endless loop
 }
-
-
-
 
 void set_icon(enum icon icon_name) {
     u8g2_ClearBuffer(&_u8g2);
@@ -243,8 +174,6 @@ void set_icon(enum icon icon_name) {
         break;
       case open:
         u8g2_DrawXBM(&_u8g2, 32, 0, 64, 64, icon_open);
-        // u8g2_SetFont(&_u8g2, u8g2_font_8x13_tf);
-        // u8g2_SetFont(&_u8g2, u8g2_font_7x13_tr);
         u8g2_SetFont(&_u8g2, u8g2_font_6x13_tf);
         u8g2_DrawStr(&_u8g2, 40, 36, SAFETYCOOK_SOFTWARE_VERSION);
         break;    
@@ -256,19 +185,14 @@ void app_main(void) {
     printf("Start ...\n" );
     static const char* TAG = "main";
     esp_log_level_set(TAG, ESP_LOG_DEBUG);
-  //  bool UART_driver_installed = false;
-
-    
-    ESP_LOGI(TAG, "(I) start");
-    ESP_LOGD(TAG, "(D) start");
 
     gpio_config_t io_conf; // Fix issue with GPIO 14 (RED LED) didn't work well
-    io_conf.intr_type = GPIO_INTR_DISABLE; //disable interrupt
-    io_conf.mode = GPIO_MODE_OUTPUT;       //set as output mode
-    io_conf.pin_bit_mask = GPIO_OUTPUT_PIN_SEL; //bit mask of the pins that you want to set, e.g.GPIO14/27
-    io_conf.pull_down_en = (gpio_pulldown_t) 0;//disable pull-down mode
-    io_conf.pull_up_en = (gpio_pullup_t)0;  //disable pull-up mode
-    gpio_config(&io_conf);   //configure GPIO with the given settings
+    io_conf.intr_type = GPIO_INTR_DISABLE; // disable interrupt
+    io_conf.mode = GPIO_MODE_OUTPUT;       // set as output mode
+    io_conf.pin_bit_mask = GPIO_OUTPUT_PIN_SEL; // bit mask of the pins that you want to set, e.g.GPIO14/27
+    io_conf.pull_down_en = (gpio_pulldown_t) 0; // disable pull-down mode
+    io_conf.pull_up_en = (gpio_pullup_t)0;      // disable pull-up mode
+    gpio_config(&io_conf);   // configure GPIO with the given settings
 
     gpio_set_direction((gpio_num_t) SSD1306_PWR, GPIO_MODE_OUTPUT);
     gpio_set_direction((gpio_num_t) SSD1306_GND, GPIO_MODE_OUTPUT);
@@ -278,12 +202,8 @@ void app_main(void) {
     gpio_set_direction((gpio_num_t) GREEN_LED_GND, GPIO_MODE_OUTPUT);
     gpio_set_level((gpio_num_t) SSD1306_PWR, 1); // +3.3V
     gpio_set_level((gpio_num_t) SSD1306_GND, 0); // GND
-    
     gpio_set_level((gpio_num_t) RED_LED_PWR, 0);
     gpio_set_level((gpio_num_t) RED_LED_GND, 0);
-    
-    // gpio_set_level(RED_LED_GND, 0); // GND
-
     gpio_set_level((gpio_num_t) GREEN_LED_PWR, 0);
     gpio_set_level((gpio_num_t) GREEN_LED_GND, 0); // GND
 
@@ -301,13 +221,11 @@ void app_main(void) {
 
     u8g2_esp32_hal_init(u8g2_esp32_hal);
 
-    // u8g2_t u8g2;  // a structure which will contain all the data for one display
     u8g2_Setup_ssd1306_i2c_128x64_noname_f(
           &_u8g2
         , U8G2_R0
         , u8g2_esp32_i2c_byte_cb
         , u8g2_esp32_gpio_and_delay_cb);  // init u8g2 structure
-
     
     // Note that address '0x78' is the I2C address already shifted left to include the read/write flag. 
     // Instead of supplying the address 0x3C which would be 0011 1100 supply 0x78 which would be 0111 1000.
@@ -318,41 +236,35 @@ void app_main(void) {
     ESP_LOGI(TAG, "u8g2 SetPowerSave");
     u8g2_SetPowerSave(&_u8g2, 0);  // wake up display
   
-
     u8g2_ClearBuffer(&_u8g2);
     u8g2_SetFont(&_u8g2, u8g2_font_tallpixelextended_tf);
     u8g2_DrawStr(&_u8g2, 31, 11, "SafetyCook");
-
     u8g2_SetFont(&_u8g2, u8g2_font_fub20_tn);
     u8g2_DrawStr(&_u8g2, 2, 41, SAFETYCOOK_SOFTWARE_VERSION);
-
     u8g2_SetFont(&_u8g2, u8g2_font_6x13_tf);
     u8g2_DrawStr(&_u8g2, 2, 63, "flasher:");
     u8g2_DrawStr(&_u8g2, 52, 64, FLASHER_SOFTWARE_VERSION);
 
-
     u8g2_SendBuffer(&_u8g2);
     vTaskDelay(5000 / portTICK_PERIOD_MS);
 
-    // flash binary configuration
-    target_binaries_t bin;
+    target_binaries_t bin; // flash binary configuration
 
     const loader_esp32_config_t config = {
         .baud_rate = VALIDATE_UART_BAUD_RATE, // 115200
         .uart_port = UART_NUM_1,
-        .uart_rx_pin =  SLAVE_RX_TX, 
-        .uart_tx_pin =  SLAVE_TX_RX, 
-        .reset_trigger_pin =  SLAVE_RESET, 
-        .gpio0_trigger_pin =  SLAVE_IO0,
-      //  .rx_buffer_size = 0,    /*!< Set to zero for default RX buffer size */
-       // .tx_buffer_size = 0,    /*!< Set to zero for default TX buffer size */        
-       // .queue_size = 0,        /*!< Set to zero for default UART queue size */
-       // .uart_queue = NULL      /*!< Set to NULL, if UART queue handle is not necessary. Otherwise, it will be assigned here */
+        .uart_rx_pin =  TARGET_RX_TX, 
+        .uart_tx_pin =  TARGET_TX_RX, 
+        .reset_trigger_pin =  TARGET_RESET, 
+        .gpio0_trigger_pin =  TARGET_IO0,
+     // .rx_buffer_size = 0,    /*!< Set to zero for default RX buffer size */
+     // .tx_buffer_size = 0,    /*!< Set to zero for default TX buffer size */        
+     // .queue_size = 0,        /*!< Set to zero for default UART queue size */
+     // .uart_queue = NULL      /*!< Set to NULL, if UART queue handle is not necessary. Otherwise, it will be assigned here */
     };
 
     button_event_t ev;
     QueueHandle_t button_events = button_init(PIN_BIT(BUTTON_1));
-
     xTaskCreate(slave_software_validate_task, "software validate task", VALIDATE_TASK_STACK_SIZE, NULL, 10, NULL);
 
     while (true) { // endless loop
@@ -365,11 +277,11 @@ void app_main(void) {
                 gpio_set_level((gpio_num_t) GREEN_LED_PWR, 1);
                 set_icon(completed);
                 ESP_LOGI(TAG, "slave software validated");
-            }else if(_firmware_version == cfvAMISS) {
+            } else if(_firmware_version == cfvAMISS) {
                 gpio_set_level((gpio_num_t) GREEN_LED_PWR, 0);
                 set_icon(open);
                 ESP_LOGI(TAG, "slave software amiss");
-            }else { // cfvUNKNOWN
+            } else { // cfvUNKNOWN
                 gpio_set_level((gpio_num_t) GREEN_LED_PWR, 0);
                 // set_icon(open);
                 ESP_LOGI(TAG, "slave software unknown");
@@ -416,7 +328,6 @@ void app_main(void) {
                                     ESP_LOGI(TAG, "flash binary 'app' completed");
                                     set_icon(progress_3_3);
 #ifdef SAFETYCOOK_ROM
-
                                     if(flash_binary(bin.ota.data,  bin.ota.size,  bin.ota.addr) != ESP_LOADER_SUCCESS) {
                                         ESP_LOGE(TAG, "flash binary 'ota' failed");
                                         set_icon(failed);
@@ -424,7 +335,6 @@ void app_main(void) {
                                         ESP_LOGI(TAG, "flash binary 'ota' completed");                    
                                     } // ota completed
 #endif
-
                                 } // app completed
                             } // part completed
                         } // boot completed
@@ -433,6 +343,7 @@ void app_main(void) {
 
                 ESP_LOGI(TAG, "uart driver delete");
                 uart_driver_delete(config.uart_port);
+                xQueueReset(button_events); // remove button presses 
                 gpio_set_level((gpio_num_t) RED_LED_PWR, 0);
                 _toggle_validate_slave_software_task_enabled = true;
                 

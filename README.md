@@ -33,8 +33,6 @@ git clone https://github.com/craftmetrics/esp32-button.git<br/>
 git clone https://github.com/olikraus/u8g2.git<br/>
 git clone https://github.com/mdvorak/esp-u8g2-hal.git<br/>
 <br/>
-// git clone https://github.com/TaraHoleInIt/tarablessd1306.git<br/>
-
 change (/components/esp32-button/src/button.c) line 132 to 'debounce[idx].inverted = false;'<br/>
 change (/components/esp-u8g2-hal/include/u8g2_esp32_hal.h) line 27 to 'I2C_MASTER_FREQ_HZ 250000'<br/>
 

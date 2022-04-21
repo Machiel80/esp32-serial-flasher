@@ -56,15 +56,10 @@ Partition Table -> CONFIG_PARTITION_TABLE_SINGLE_APP_LARGE=y
 
 ## Hardware
 
-controller  : SSD1306 with I2C interface
-size        : 0.96 inches
-resolution  : 128×64 pixels
-power supply: 3.3V – 6V
-
-
-![flashbox pin layout](https://github.com/Machiel80/esp32-serial-flasher/blob/main/flashbox%20design/doc/flashbox%20pin%20layout.png?raw=true)<br/>
 ![flashbox pin layout](https://github.com/Machiel80/esp32-serial-flasher/blob/main/flashbox%20design/doc/flashbox%20wire%20diagram.png?raw=true)<br/>
-![flashbox pin layout](https://github.com/[username]/[reponame]/blob/main/flashbox%20design/doc/flashbox%20wire%20diagram.png?raw=true)<br/>
+<br/>
+
+
 
 
 

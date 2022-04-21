@@ -62,9 +62,10 @@ resolution  : 128×64 pixels
 power supply: 3.3V – 6V
 
 
-![flashbox pin layout](https://github.com/Machiel80/esp32-serial-flasher/blob/main/flashbox design/doc/flashbox pin layout.png?raw=true)<br/>
-![flashbox pin layout](https://github.com/Machiel80/esp32-serial-flasher/blob/main/flashbox design/doc/flashbox wire diagram.png?raw=true)<br/>
-![flashbox pin layout](https://github.com/[username]/[reponame]/blob/main/flashbox design/doc/flashbox wire diagram.png?raw=true)<br/>
+![flashbox pin layout](https://github.com/Machiel80/esp32-serial-flasher/blob/main/flashbox%20design/doc/flashbox%20pin%20layout.png?raw=true)<br/>
+![flashbox pin layout](https://github.com/Machiel80/esp32-serial-flasher/blob/main/flashbox%20design/doc/flashbox%20wire%20diagram.png?raw=true)<br/>
+![flashbox pin layout](https://github.com/[username]/[reponame]/blob/main/flashbox%20design/doc/flashbox%20wire%20diagram.png?raw=true)<br/>
+
 
 
 

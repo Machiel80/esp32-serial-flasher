@@ -56,7 +56,9 @@ Partition Table -> CONFIG_PARTITION_TABLE_SINGLE_APP_LARGE=y
 
 ## Hardware
 
-![flashbox pin layout](https://github.com/Machiel80/esp32-serial-flasher/blob/main/flashbox%20design/doc/flashbox%20wire%20diagram.png?raw=true)<br/>
+![flashbox pin layout](https://github.com/Machiel80/esp32-serial-flasher/blob/main/flashbox%20design/doc/flashbox%20pin-layout.png?raw=true)<br/>
+<br/>
+![flashbox wire diagram](https://github.com/Machiel80/esp32-serial-flasher/blob/main/flashbox%20design/doc/flashbox%20wire%20diagram.png?raw=true)<br/>
 <br/>
 
 

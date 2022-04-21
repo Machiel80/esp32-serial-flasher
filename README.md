@@ -1,4 +1,4 @@
-# esp32-serial-flasher
+# Esp32 serial flasher
 
 ## Overview
 
@@ -28,27 +28,29 @@ Table below shows connection between two ESP32 devices.
 
 ## Install
 cd components
-git clone https://github.com/espressif/esp-serial-flasher.git
-git clone https://github.com/craftmetrics/esp32-button.git
-git clone https://github.com/olikraus/u8g2.git
-git clone https://github.com/mdvorak/esp-u8g2-hal.git
+git clone https://github.com/espressif/esp-serial-flasher.git<br/>
+git clone https://github.com/craftmetrics/esp32-button.git<br/>
+git clone https://github.com/olikraus/u8g2.git<br/>
+git clone https://github.com/mdvorak/esp-u8g2-hal.git<br/>
+<br/>
+// git clone https://github.com/TaraHoleInIt/tarablessd1306.git<br/>
 
-// git clone https://github.com/TaraHoleInIt/tarablessd1306.git
-
-change (/components/esp32-button/src/button.c) line 132 to 'debounce[idx].inverted = false;'
-change (/components/esp-u8g2-hal/include/u8g2_esp32_hal.h) line 27 to 'I2C_MASTER_FREQ_HZ 250000'
+change (/components/esp32-button/src/button.c) line 132 to 'debounce[idx].inverted = false;'<br/>
+change (/components/esp-u8g2-hal/include/u8g2_esp32_hal.h) line 27 to 'I2C_MASTER_FREQ_HZ 250000'<br/>
 
 ## Inspiration
 
-https://github.com/espressif/esp-serial-flasher
-http://www.lucadentella.it/en/2017/10/30/esp32-25-display-oled-con-u8g2/
-https://github.com/lucadentella/esp32-tutorial/tree/master/18_u8g2
-https://eprotutorials.com/esp32-gpio-tutorial/
-https://github.com/TaraHoleInIt/tarablessd1306
-https://github.com/TaraHoleInIt/tarablessd1306_examples/blob/master/HelloWorld/main/main.c
-https://www.mischianti.org/images-to-byte-array-online-converter-cpp-arduino/
-https://github.com/mkfrey/u8g2-hal-esp-idf
-https://www.youtube.com/watch?v=eLmpKKaQL54
+https://eprotutorials.com/esp32-gpio-tutorial/<br/>
+https://github.com/espressif/esp-serial-flasher<br/>
+http://www.lucadentella.it/en/2017/10/30/esp32-25-display-oled-con-u8g2<br/>
+https://github.com/lucadentella/esp32-tutorial/tree/master/18_u8g2<br/>
+https://github.com/mkfrey/u8g2-hal-esp-idf<br/>
+https://github.com/mdvorak/esp-u8g2-hal<br/>
+https://www.mischianti.org/images-to-byte-array-online-converter-cpp-arduino<br/>
+https://convertio.co/bmp-xbm/<br/>
+https://www.esp32.com/viewtopic.php?t=18656<br/>
+https://www.youtube.com/watch?v=eLmpKKaQL54<br/>
+https://randomnerdtutorials.com/solved-failed-to-connect-to-esp32-timed-out-waiting-for-packet-header<br/>
 
 ## IDF menuconfig
 

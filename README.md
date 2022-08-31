@@ -1,8 +1,21 @@
 # Esp32 serial flasher (FlashBox)
 
 ## Overview
-Esp32 (host) to Esp32 (target) serial flasher, how to flash the ESP32 target from this (host) using esp_serial_flash component API.
-Binaries to be flashed from host MCU to the target Espressif SoC can be found in `firmware_target` folder and are converted into C-array during build process.
+The FlashBox is an Esp32 (host) to Esp32 (target) serial flasher. 
+
+This concept is especially useful when you need to produce a small quantity of PCB with embedded ESP32 software. The process of designing 
+(for example with EasyEDA.com) and producing (for example from jlcpcb.com) PCB’s is relative straightforward. But in small quantities 
+(less than 1000 pcs) it’s made without your embedded software on the PCB. It's up to you how to get your software into the ESP32 chip.<br/>
+<br/>
+This FashBox project is meant to making the flashing process straightforward as well. It makes the flash job quick, easy to execute (press the button), 
+reliable (green LED will burn when software is verified) and finally the process scalable. Scalable, a FlashBox can operate independently from a computer and is cheap to build, a rough 
+estimation of the out-of-pocket cost is less than 100 dollars. That makes the FlashBox scalable, build more of them, when you want to outsource the flashing process.
+
+Technical<br/>
+The FlashBox software is build on the 'Serial flasher' component from espressif. This component is a software library for flashing Espressif SoCs from other host microcontroller. 
+Espressif SoCs are normally programmed via serial interface (UART). Port layer for given host microcontroller has to be implemented, if not available.
+
+Your own ESP32 binary must be placed in the `firmware_target` directory and will be converted into C-array during the build process.
 
 Following steps are performed in order to re-program target's memory:
 

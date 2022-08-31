@@ -11,13 +11,17 @@
 #include "esp_log.h"
 #include "driver/uart.h"
 #include "driver/gpio.h"
-#include "esp32_port.h"
+
 #include "esp_loader.h"
-#include "firmware_target.h"
+
 #include <u8g2.h>
-#include "u8g2_esp32_hal.h"
-#include "button.h"
-#include "icons.h"
+extern "C" {
+    #include "esp32_port.h"
+    #include "firmware_target.h"
+    #include "u8g2_esp32_hal.h"
+    #include "button.h"
+    #include "icons.h"
+}
 
 /* extern "C" {
 	void app_main(void);
@@ -181,7 +185,7 @@ void set_icon(enum icon icon_name) {
     u8g2_SendBuffer(&_u8g2);
 }
 
-void app_main(void) {
+extern "C" void app_main(void) {
     printf("Start ...\n" );
     static const char* TAG = "main";
     esp_log_level_set(TAG, ESP_LOG_DEBUG);
@@ -207,7 +211,9 @@ void app_main(void) {
     gpio_set_level((gpio_num_t) GREEN_LED_PWR, 0);
     gpio_set_level((gpio_num_t) GREEN_LED_GND, 0); // GND
 
-    u8g2_esp32_hal_t u8g2_esp32_hal = U8G2_ESP32_HAL_DEFAULT;
+    u8g2_esp32_hal_t u8g2_esp32_hal = U8G2_ESP32_HAL_DEFAULT_2;
+
+    
     u8g2_esp32_hal.sda = (gpio_num_t) SSD1306_SDA;;  // data for I²C
     u8g2_esp32_hal.scl = (gpio_num_t) SSD1306_SCL;;  // clock for I²C
 

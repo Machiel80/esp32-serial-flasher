@@ -36,6 +36,18 @@
 #define VALIDATE_TEST_CTS (UART_PIN_NO_CHANGE)
 #define VALIDATE_TASK_STACK_SIZE    2048
 
+#define U8G2_ESP32_HAL_DEFAULT_2  {        \
+    (gpio_num_t) U8G2_ESP32_HAL_UNDEFINED, \
+    (gpio_num_t) U8G2_ESP32_HAL_UNDEFINED, \
+    (gpio_num_t) U8G2_ESP32_HAL_UNDEFINED, \
+    (gpio_num_t) U8G2_ESP32_HAL_UNDEFINED, \
+    (gpio_num_t) U8G2_ESP32_HAL_UNDEFINED, \
+    (gpio_num_t) U8G2_ESP32_HAL_UNDEFINED, \
+    (gpio_num_t) U8G2_ESP32_HAL_UNDEFINED, \
+    I2C_MASTER_NUM,                        \
+    I2C_MASTER_FREQ_HZ   }
+
+
 enum cookerFirmwareVersion {
   cfvVALIDATED,
   cfvAMISS,

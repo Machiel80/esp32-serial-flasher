@@ -29,13 +29,13 @@ Following steps are performed in order to re-program target's memory:
 
 ## firmware_target preparation in outline
 
-1. Add a UART 'version' command to the target firmware that returns the current version.
+1. Add a UART 'version' command to the target firmware that returns the current version.<br/>
    See 'sourcecode example target/blink_example.zip' for an implementation example.
 2. Add the same version number from the previous step and change the TARGET_SOFTWARE_VERSION in 'main/main.h'
 3. Compile the target firmware and place the .bin files in the 'firmware_target/bin' directory
 4. Update the filenames in the 'firmware_target/firmware_target.c' file.<br/>
    The partition, boot, ota and application filenames should match with the names of your bin files ('firmware_target/bin' directory).<br/>
-   Tip: look into the 'build/binaries.c' for the correct spelling of the names.
+   Tip: look into the 'build/binaries.c' for the correct spelling of the names.<br/>
    Tip: nevert start a bin filename with a number
 5. Compile and flash the FlashBox software
 

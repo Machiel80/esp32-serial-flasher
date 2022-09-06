@@ -3,15 +3,17 @@
 
 #ifdef CUSTOM_ROM
 #define OTA_ROM
-#define TARGET_NAME     "SafetyCook"
-#define CUSTOM_ROM      safetycook_20220905_bin
-#define CUSTOM_ROM_SIZE safetycook_20220905_bin_size
+#define TARGET_NAME "SafetyCook"
+#define CUSTOM_ROM_BIN safetycook_20220905_bin
+#define CUSTOM_ROM_BIN_SIZE safetycook_20220905_bin_size
+#define TARGET_SOFTWARE_VERSION   "20220902"
 #else
 #define TARGET_NAME "Esp32Blink"
+#define TARGET_SOFTWARE_VERSION   "20220906"
 #endif
 
 #define FLASHER_SOFTWARE_VERSION  "20220907"
-#define TARGET_SOFTWARE_VERSION   "20220906"
+
 
 // Tip -> update (add empty line and save) /main/CMakeLists.txt to rebuild the .bin files into 'build/binaries.c'
 

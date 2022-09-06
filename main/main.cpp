@@ -112,13 +112,17 @@ static void slave_software_validate_task(void *arg) {
                     version_request_sent = false;
                     if (strstr((char *) data, TARGET_SOFTWARE_VERSION) != NULL) {
                         change_request_validate_software("equal versions", cfvVALIDATED);
+                        // printf("VALID (%.*s)\n",len, data);
                     }else {
                         change_request_validate_software("unknown version", cfvAMISS);
+                        // printf("UNKNOWN (%.*s)\n",len, data);
                     }
                     timeout_timer_active = false;
+                    
+
                 } else if(len > 5) { // slave is sending UART information, ignore input and wait until 
                     lastVersionRequestTime = esp_timer_get_time() / 1000ULL; // restart timer
-                    change_request_validate_software("noise, version unknown", cfvUNKNOWN);
+                    // change_request_validate_software("noise, version unknown", cfvUNKNOWN);
                 }
                 // ESP_LOGI(TAG,"%.*s",len, data);
                 // printf("%.*s",len, data);
@@ -131,6 +135,7 @@ static void slave_software_validate_task(void *arg) {
                     version_request_sent = true;
                     ESP_LOGD(TAG,"send UART request for version information");
                     // Write data back to the UART
+                    uart_flush_input(VALIDATE_UART_PORT_NUM);
                     uart_write_bytes(VALIDATE_UART_PORT_NUM, "version\n",strlen("version\n"));
                     lastVersionResponseTime = esp_timer_get_time() / 1000ULL; // restart timer
                     timeout_timer_active = true;

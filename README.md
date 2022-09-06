@@ -26,6 +26,35 @@ Following steps are performed in order to re-program target's memory:
 5. Then `esp_loader_flash_start()` is called to enter flashing mode and erase amount of memory to be flashed.
 6. `esp_loader_flash_write()` function is called repeatedly until the whole binary image is transfered.
 
+
+## firmware_target preparation in outline
+
+1. Add a UART 'version' command to the target firmware, code example:
+
+  const esp_console_cmd_t cmd_version = {
+      .command = "version",
+      .help = "version",
+      .hint = "shows the current (esp32) software (firmware) version",
+      .func = &uart_cmd,
+  };
+  ESP_ERROR_CHECK(esp_console_cmd_register(&cmd_version));
+
+  static int uart_cmd(int argc, char **argv) {
+
+    if(strcmp(argv[0],"version") == 0) {
+        ESP_LOGI(TAG,"firmware version: 20220906");
+    }
+    return 0;
+  }
+
+2. Add the same version number from the previous step and change the TARGET_SOFTWARE_VERSION in 'main/main.h'
+3. Compile target firmware and place the .bin files in the 'firmware_target/bin' directory
+4. Update the filenames in the 'firmware_target/firmware_target.c' file.<br/>
+   The partition, boot, ota and application filenames should match with the names of your bin files in the 'firmware_target/bin' directory.<br/>
+   Tip: look into the 'build/binaries.c' for the correct spelling of the names.
+   Tip: nevert start a bin filename with a number
+5. Compile and flash the FlashBox software
+
 ## Hardware connection
 Table below shows connection between the FlashBox host and thet target ESP32 devices.
 
@@ -37,7 +66,7 @@ Table below shows connection between the FlashBox host and thet target ESP32 dev
 |    IO25      |      RX0      |
 
 
-## Install
+## Installation history, dont's execute, this is just for the record
 mkdir components<br/>
 cd components<br/>
 git clone https://github.com/espressif/esp-serial-flasher.git<br/>
@@ -69,9 +98,3 @@ Partition Table -> CONFIG_PARTITION_TABLE_SINGLE_APP_LARGE=y
 <br/>
 ![flashbox wire diagram](https://github.com/Machiel80/esp32-serial-flasher/blob/main/flashbox%20design/doc/flashbox%20wire%20diagram.png?raw=true)<br/>
 <br/>
-
-
-
-
-
-

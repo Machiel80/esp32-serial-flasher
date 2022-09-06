@@ -110,7 +110,7 @@ static void slave_software_validate_task(void *arg) {
             if(len > 0) {
                 if(version_request_sent == true) {
                     version_request_sent = false;
-                    if (memcmp ( data, SAFETYCOOK_SOFTWARE_VERSION, strlen(SAFETYCOOK_SOFTWARE_VERSION) ) == 0) {
+                    if (strstr((char *) data, TARGET_SOFTWARE_VERSION) != NULL) {
                         change_request_validate_software("equal versions", cfvVALIDATED);
                     }else {
                         change_request_validate_software("unknown version", cfvAMISS);
@@ -179,7 +179,7 @@ void set_icon(enum icon icon_name) {
       case open:
         u8g2_DrawXBM(&_u8g2, 32, 0, 64, 64, icon_open);
         u8g2_SetFont(&_u8g2, u8g2_font_6x13_tf);
-        u8g2_DrawStr(&_u8g2, 40, 36, SAFETYCOOK_SOFTWARE_VERSION);
+        u8g2_DrawStr(&_u8g2, 40, 36, TARGET_SOFTWARE_VERSION);
         break;    
     }
     u8g2_SendBuffer(&_u8g2);
@@ -244,9 +244,9 @@ extern "C" void app_main(void) {
   
     u8g2_ClearBuffer(&_u8g2);
     u8g2_SetFont(&_u8g2, u8g2_font_tallpixelextended_tf);
-    u8g2_DrawStr(&_u8g2, 31, 11, "SafetyCook");
+    u8g2_DrawStr(&_u8g2, 31, 11, TARGET_NAME);
     u8g2_SetFont(&_u8g2, u8g2_font_fub20_tn);
-    u8g2_DrawStr(&_u8g2, 2, 41, SAFETYCOOK_SOFTWARE_VERSION);
+    u8g2_DrawStr(&_u8g2, 2, 41, TARGET_SOFTWARE_VERSION);
     u8g2_SetFont(&_u8g2, u8g2_font_6x13_tf);
     u8g2_DrawStr(&_u8g2, 2, 63, "FlashBox:");
     u8g2_DrawStr(&_u8g2, 60, 63, FLASHER_SOFTWARE_VERSION);
@@ -333,7 +333,7 @@ extern "C" void app_main(void) {
                                 } else {
                                     ESP_LOGI(TAG, "flash binary 'app' completed");
                                     set_icon(progress_3_3);
-#ifdef SAFETYCOOK_ROM
+#ifdef OTA_ROM
                                     if(flash_binary(bin.ota.data,  bin.ota.size,  bin.ota.addr) != ESP_LOADER_SUCCESS) {
                                         ESP_LOGE(TAG, "flash binary 'ota' failed");
                                         set_icon(failed);

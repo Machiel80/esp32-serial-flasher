@@ -32,48 +32,48 @@
 // OTA_DATA_ADDRESS: See: https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-reference/system/ota.html#ota-data-partition
 
 
-#ifdef SAFETYCOOK_ROM
-extern const uint8_t  bootloader_dio_40m_bin[];
-extern const uint32_t bootloader_dio_40m_bin_size;
-extern const uint8_t  SAFETYCOOK_BIN[];
-extern const uint32_t SAFETYCOOK_BIN_SIZE;
-extern const uint8_t  partitions_bin[];
-extern const uint32_t partitions_bin_size;
-extern const uint8_t  boot_app0_bin[];
-extern const uint32_t boot_app0_bin_size;
+#ifdef CUSTOM_ROM
+extern const uint8_t  bootloader_bin[];
+extern const uint32_t bootloader_bin_size;
+extern const uint8_t  CUSTOM_ROM_BIN[];
+extern const uint32_t CUSTOM_ROM_BIN_SIZE;
+extern const uint8_t  partition_table_bin[];
+extern const uint32_t partition_table_bin_size;
+extern const uint8_t  ota_data_initial_bin[];
+extern const uint32_t ota_data_initial_bin_size;
 #else
-extern const uint8_t  bootloader_1_sec_bin[];
-extern const uint32_t bootloader_1_sec_bin_size;
-extern const uint8_t  blink_1_sec_bin[];
-extern const uint32_t blink_1_sec_bin_size;
-extern const uint8_t  partition_table_1_sec_bin[];
-extern const uint32_t partition_table_1_sec_bin_size;
+extern const uint8_t  bootloader_bin[];
+extern const uint32_t bootloader_bin_size;
+extern const uint8_t  partition_table_bin[];
+extern const uint32_t partition_table_bin_size;
+extern const uint8_t  blink_bin[];
+extern const uint32_t blink_bin_size;
 #endif
 
 void get_binaries(target_chip_t target, target_binaries_t *bins) {
-#ifdef SAFETYCOOK_ROM
+#ifdef CUSTOM_ROM
     
-        bins->boot.data = bootloader_dio_40m_bin;
-        bins->boot.size = bootloader_dio_40m_bin_size;
+        bins->boot.data = bootloader_bin;
+        bins->boot.size = bootloader_bin_size;
         bins->boot.addr = BOOTLOADER_ADDRESS;
-        bins->part.data = partitions_bin;
-        bins->part.size = partitions_bin_size;
+        bins->part.data = partition_table_bin;
+        bins->part.size = partition_table_bin_size;
         bins->part.addr = PARTITION_ADDRESS;
-        bins->app.data  = SAFETYCOOK_BIN;
-        bins->app.size  = SAFETYCOOK_BIN_SIZE;
+        bins->app.data  = CUSTOM_ROM_BIN;
+        bins->app.size  = CUSTOM_ROM_BIN_SIZE;
         bins->app.addr  = APPLICATION_ADDRESS;
-        bins->ota.data  = boot_app0_bin;
-        bins->ota.size  = boot_app0_bin_size;
+        bins->ota.data  = ota_data_initial_bin;
+        bins->ota.size  = ota_data_initial_bin_size;
         bins->ota.addr  = OTA_DATA_ADDRESS;
 #else
-        bins->boot.data = bootloader_1_sec_bin;
-        bins->boot.size = bootloader_1_sec_bin_size;
+        bins->boot.data = bootloader_bin;
+        bins->boot.size = bootloader_bin_size;
         bins->boot.addr = BOOTLOADER_ADDRESS;
-        bins->part.data = partition_table_1_sec_bin;
-        bins->part.size = partition_table_1_sec_bin_size;
+        bins->part.data = partition_table_bin;
+        bins->part.size = partition_table_bin_size;
         bins->part.addr = PARTITION_ADDRESS;
-        bins->app.data  = blink_1_sec_bin;
-        bins->app.size  = blink_1_sec_bin_size;
+        bins->app.data  = blink_bin;
+        bins->app.size  = blink_bin_size;
         bins->app.addr  = APPLICATION_ADDRESS;
 
 #endif

@@ -93,7 +93,8 @@ dependencies.lock
 managed_components
 
 # firmware_target (1-2)
-firmware_target/bin/*
+firmware_target/bin_safetycook/*
+firmware_target/bin_blink/*
 
 # firmware_target (2-2)
-firmware_target/archive
+# firmware_target/archive

@@ -26,7 +26,7 @@ Following steps are performed in order to re-program target's memory:
 5. Then `esp_loader_flash_start()` is called to enter flashing mode and erase amount of memory to be flashed.
 6. `esp_loader_flash_write()` function is called repeatedly until the whole binary image is transfered.
 
-## firmware_target preparation in outline
+## Target firmware preparation in outline
 
 1. Add a UART 'version' command to the target firmware that returns the current version.<br/>
    See 'sourcecode example target/blink_example.zip' for an implementation example.
@@ -49,7 +49,7 @@ Table below shows connection between the FlashBox host and thet target ESP32 dev
 |    IO25      |      RX0      |
 
 
-## Installation history, dont's execute, this is just for the record
+## Installation history, dont's execute this is just for the record
 mkdir components<br/>
 cd components<br/>
 git clone https://github.com/espressif/esp-serial-flasher.git<br/>

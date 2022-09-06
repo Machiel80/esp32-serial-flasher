@@ -1,5 +1,7 @@
 # Esp32 serial flasher (FlashBox)
 
+![flashbox overview](https://github.com/Machiel80/esp32-serial-flasher/blob/main/flashbox%20design/images/overview%20filled.jpg?raw=true)<br/>
+
 ## Overview
 The FlashBox is an Esp32 (host) to Esp32 (target) serial flasher. 
 
@@ -9,9 +11,9 @@ This concept is especially useful when you need to produce a small quantity of P
 <br/>
 This FashBox project is meant to making the flashing process straightforward as well. It makes the flash job quick, easy to execute (press the button), 
 reliable (green LED will burn when software is verified) and finally the process scalable. Scalable, a FlashBox can operate independently from a computer and is cheap to build, a rough 
-estimation of the out-of-pocket cost is less than 30 dollars (see 'flashbox design/components/flashbox component list.xlsx'). That makes the FlashBox scalable, build more of them, when you want to outsource the flashing process.
+estimation of the out-of-pocket cost is around 0 dollars [^1]. That makes the FlashBox scalable, build more of them, when you want to outsource the flashing process.
 
-Technical<br/>
+## Technical
 The FlashBox software is build on the 'Serial flasher' component from espressif. This component is a software library for flashing Espressif SoCs from other host microcontroller. 
 Espressif SoCs are normally programmed via serial interface (UART). Port layer for given host microcontroller has to be implemented, if not available.
 
@@ -25,6 +27,8 @@ Following steps are performed in order to re-program target's memory:
 4. Binary file is opened and its size is acquired, as it has to be known before flashing.
 5. Then `esp_loader_flash_start()` is called to enter flashing mode and erase amount of memory to be flashed.
 6. `esp_loader_flash_write()` function is called repeatedly until the whole binary image is transfered.
+
+[^1]: See 'flashbox design/components/flashbox component list.xlsx'
 
 ## Target firmware preparation in outline
 
@@ -73,11 +77,8 @@ https://www.esp32.com/viewtopic.php?t=18656<br/>
 https://www.youtube.com/watch?v=eLmpKKaQL54<br/>
 https://randomnerdtutorials.com/solved-failed-to-connect-to-esp32-timed-out-waiting-for-packet-header<br/>
 
-## IDF menuconfig
-Partition Table -> CONFIG_PARTITION_TABLE_SINGLE_APP_LARGE=y
-
-## Hardware
-![flashbox pin layout](https://github.com/Machiel80/esp32-serial-flasher/blob/main/flashbox%20design/doc/flashbox%20pin-layout.png?raw=true)<br/>
+## Hardware wire diagram
+![flashbox wire diagram](https://github.com/Machiel80/esp32-serial-flasher/blob/main/flashbox%20design/doc/flashbox%20wire%20diagram%20with%20target.png?raw=true)<br/>
 <br/>
-![flashbox wire diagram](https://github.com/Machiel80/esp32-serial-flasher/blob/main/flashbox%20design/doc/flashbox%20wire%20diagram.png?raw=true)<br/>
+![flashbox wire diagram with dev board](https://github.com/Machiel80/esp32-serial-flasher/blob/main/flashbox%20design/doc/flashbox%20wire%20diagram.png?raw=true)<br/>
 <br/>

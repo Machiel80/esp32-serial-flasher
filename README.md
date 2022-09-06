@@ -9,7 +9,7 @@ This concept is especially useful when you need to produce a small quantity of P
 <br/>
 This FashBox project is meant to making the flashing process straightforward as well. It makes the flash job quick, easy to execute (press the button), 
 reliable (green LED will burn when software is verified) and finally the process scalable. Scalable, a FlashBox can operate independently from a computer and is cheap to build, a rough 
-estimation of the out-of-pocket cost is less than 100 dollars. That makes the FlashBox scalable, build more of them, when you want to outsource the flashing process.
+estimation of the out-of-pocket cost is less than 30 dollars (see 'flashbox design/components/flashbox component list.xlsx'). That makes the FlashBox scalable, build more of them, when you want to outsource the flashing process.
 
 Technical<br/>
 The FlashBox software is build on the 'Serial flasher' component from espressif. This component is a software library for flashing Espressif SoCs from other host microcontroller. 
@@ -26,8 +26,7 @@ Following steps are performed in order to re-program target's memory:
 5. Then `esp_loader_flash_start()` is called to enter flashing mode and erase amount of memory to be flashed.
 6. `esp_loader_flash_write()` function is called repeatedly until the whole binary image is transfered.
 
-
-## firmware_target preparation in outline
+## Target firmware preparation in outline
 
 1. Add a UART 'version' command to the target firmware that returns the current version.<br/>
    See 'sourcecode example target/blink_example.zip' for an implementation example.
@@ -50,7 +49,7 @@ Table below shows connection between the FlashBox host and thet target ESP32 dev
 |    IO25      |      RX0      |
 
 
-## Installation history, dont's execute, this is just for the record
+## Installation history, dont's execute this is just for the record
 mkdir components<br/>
 cd components<br/>
 git clone https://github.com/espressif/esp-serial-flasher.git<br/>

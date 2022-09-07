@@ -6,11 +6,8 @@
 #define PARTITION_TABLE_BIN_SIZE partition_table_bin_size
 #define APPLICATION_BIN          blink_bin
 #define APPLICATION_BIN_SIZE     blink_bin_size
-
-#ifdef OTA_ROM
 #define OTA_BIN                  ota_data_initial_bin
 #define OTA_BIN_SIZE             ota_data_initial_bin_size
-#endif
 
 // Tip -> update (add empty line and save) /main/CMakeLists.txt to rebuild the .bin files into 'build/binaries.c'
 

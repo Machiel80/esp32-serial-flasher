@@ -188,11 +188,11 @@ extern "C" void app_main(void) {
     ESP_LOGI(TAG,"Start ...");
 
     esp_log_level_set("*", ESP_LOG_INFO);
-    esp_log_level_set("connect to target", ESP_LOG_INFO);
-    esp_log_level_set("flash binary", ESP_LOG_INFO);
-    esp_log_level_set("main", ESP_LOG_DEBUG);
-    esp_log_level_set("software changed", ESP_LOG_DEBUG);
-    esp_log_level_set("validate software", ESP_LOG_DEBUG);
+    //esp_log_level_set("connect to target", ESP_LOG_DEBUG);
+    //esp_log_level_set("flash binary", ESP_LOG_DEBUG);
+    //esp_log_level_set("main", ESP_LOG_DEBUG);
+    //esp_log_level_set("software changed", ESP_LOG_DEBUG);
+    //esp_log_level_set("validate software", ESP_LOG_DEBUG);
 
     ESP_LOGD(TAG,"DEBUG LOG ENABLED");
 

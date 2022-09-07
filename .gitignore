@@ -95,6 +95,7 @@ managed_components
 # firmware_target (1-2)
 firmware_target/bin_safetycook/*
 firmware_target/bin_blink/*
+safetycook notes/*
 
 # firmware_target (2-2)
 # firmware_target/archive

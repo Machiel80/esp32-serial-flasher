@@ -7,7 +7,7 @@
 #include <string.h>
 #include "main.h"
 #include "esp_err.h"
-#define LOG_LOCAL_LEVEL ESP_LOG_DEBUG // ESP_LOG_VERBOSE
+// #define LOG_LOCAL_LEVEL ESP_LOG_INFO // ESP_LOG_DEBUG, ESP_LOG_VERBOSE
 #include "esp_log.h"
 #include "driver/uart.h"
 #include "driver/gpio.h"
@@ -23,18 +23,13 @@ extern "C" {
     #include "icons.h"
 }
 
-/* extern "C" {
-	void app_main(void);
-} */
-
 volatile bool _toggle_validate_slave_software_task_enabled   = true;
 volatile bool _toggle_result_validate_slave_software_changed = true;
 u8g2_t _u8g2;  // a structure which will contain all the data for one display
 enum cookerFirmwareVersion _firmware_version = cfvUNKNOWN;
 
 static void change_request_validate_software(const char* note, enum cookerFirmwareVersion firmware_version_state) {
-    const char* TAG = "software changed";
-    esp_log_level_set(TAG, ESP_LOG_INFO);
+    static const char* TAG = "software changed";
 
     ESP_LOGD(TAG,"request '%s'",note);
 
@@ -53,7 +48,6 @@ static void change_request_validate_software(const char* note, enum cookerFirmwa
 static void slave_software_validate_task(void *arg) {
     static const char* TAG = "validate software";
     static bool task_restart = false;
-    esp_log_level_set(TAG, ESP_LOG_INFO);
     
     unsigned long REQUEST_FOR_VERSION_INTERVAL = 1000; // ms example: 1000 = 1 sec.
     unsigned long RESPONSE_FOR_VERSION_TIMEOUT =  200; // ms example: 1000 = 1 sec.
@@ -112,13 +106,12 @@ static void slave_software_validate_task(void *arg) {
                     version_request_sent = false;
                     if (strstr((char *) data, TARGET_SOFTWARE_VERSION) != NULL) {
                         change_request_validate_software("equal versions", cfvVALIDATED);
-                        // printf("VALID (%.*s)\n",len, data);
+                        ESP_LOGD(TAG,"VALID (%.*s)\n",len, data);
                     }else {
                         change_request_validate_software("unknown version", cfvAMISS);
-                        // printf("UNKNOWN (%.*s)\n",len, data);
+                        ESP_LOGD(TAG,"UNKNOWN (%.*s)\n",len, data);
                     }
                     timeout_timer_active = false;
-                    
 
                 } else if(len > 5) { // slave is sending UART information, ignore input and wait until 
                     lastVersionRequestTime = esp_timer_get_time() / 1000ULL; // restart timer
@@ -191,9 +184,17 @@ void set_icon(enum icon icon_name) {
 }
 
 extern "C" void app_main(void) {
-    printf("Start ...\n" );
     static const char* TAG = "main";
-    esp_log_level_set(TAG, ESP_LOG_DEBUG);
+    ESP_LOGI(TAG,"Start ...");
+
+    esp_log_level_set("*", ESP_LOG_INFO);
+    esp_log_level_set("connect to target", ESP_LOG_INFO);
+    esp_log_level_set("flash binary", ESP_LOG_INFO);
+    esp_log_level_set("main", ESP_LOG_DEBUG);
+    esp_log_level_set("software changed", ESP_LOG_DEBUG);
+    esp_log_level_set("validate software", ESP_LOG_DEBUG);
+
+    ESP_LOGD(TAG,"DEBUG LOG ENABLED");
 
     gpio_config_t io_conf; // Fix issue with GPIO 14 (RED LED) didn't work well
     io_conf.intr_type = GPIO_INTR_DISABLE; // disable interrupt
@@ -221,14 +222,6 @@ extern "C" void app_main(void) {
     
     u8g2_esp32_hal.sda = (gpio_num_t) SSD1306_SDA;;  // data for I²C
     u8g2_esp32_hal.scl = (gpio_num_t) SSD1306_SCL;;  // clock for I²C
-
-    // u8g2_esp32_hal.clk = (gpio_num_t) (-1);
-    // u8g2_esp32_hal.mosi = (gpio_num_t) (-1);
-    // u8g2_esp32_hal.cs = (gpio_num_t) (-1);
-    // u8g2_esp32_hal.reset = (gpio_num_t) (-1);
-    // u8g2_esp32_hal.dc = (gpio_num_t) (-1);
-    // u8g2_esp32_hal.i2c_num = (gpio_num_t) (-1);
-    // u8g2_esp32_hal.i2c_clk_speed = (gpio_num_t) (-1);
 
     u8g2_esp32_hal_init(u8g2_esp32_hal);
 

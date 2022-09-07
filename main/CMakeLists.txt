@@ -7,6 +7,7 @@ idf_component_register(SRCS ${srcs}
 
 set(target ${COMPONENT_LIB})
 
+
 # Embed binaries into the app.
 # In ESP-IDF this can also be done using EMBED_FILES option of idf_component_register.
 # Here an external tool is used to make file embedding similar with other ports.

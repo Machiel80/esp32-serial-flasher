@@ -1,21 +1,22 @@
 // #define OTA_ROM
-// #define CUSTOM_ROM
 
-#ifdef CUSTOM_ROM
-#define OTA_ROM
-#define TARGET_NAME "SafetyCook"
-#define CUSTOM_ROM_BIN safetycook_20220905_bin
-#define CUSTOM_ROM_BIN_SIZE safetycook_20220905_bin_size
-#define TARGET_SOFTWARE_VERSION   "20220902"
-#else
-#define TARGET_NAME "Esp32Blink"
-#define TARGET_SOFTWARE_VERSION   "20220906"
+#define BOOTLOADER_BIN           bootloader_bin
+#define BOOTLOADER_BIN_SIZE      bootloader_bin_size
+#define PARTITION_TABLE_BIN      partition_table_bin
+#define PARTITION_TABLE_BIN_SIZE partition_table_bin_size
+#define APPLICATION_BIN          blink_bin
+#define APPLICATION_BIN_SIZE     blink_bin_size
+
+#ifdef OTA_ROM
+#define OTA_BIN                  ota_data_initial_bin
+#define OTA_BIN_SIZE             ota_data_initial_bin_size
 #endif
 
-#define FLASHER_SOFTWARE_VERSION  "20220907"
-
-
 // Tip -> update (add empty line and save) /main/CMakeLists.txt to rebuild the .bin files into 'build/binaries.c'
+
+#define TARGET_NAME              "Esp32Blink"
+#define FLASHER_SOFTWARE_VERSION "20220907"
+#define TARGET_SOFTWARE_VERSION  "20220906"
 
 #define HIGHER_BAUDRATE 230400
 

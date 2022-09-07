@@ -15,7 +15,7 @@ scalable, and gives you the opportunity to outsource the flashing process.
 
 ## Costomize
 
-The software and hardware design of this project is open-source and free to use. Based on your own PCB you need to customize the soft- and hardware to let it fit for your needs. There is a material component list available (BOM), that is covered by AliExpress. The FashBox case design is published and ready to customize for your own project. That could be used to 3D-print the case. And the hardware wire diagram is there to rebuild the electronics. When you are designing your own PCB, make sure that the +5V, GND, IO0, RX, TX and EN are available. There is also a wiring diagram available if you would like to use a default ESP32 developer board as a target PCB.
+The software and hardware design of this project is open-source and free to use. Based on your own PCB you need to customize the soft- and hardware to let it fit for your needs. There is a material component list available (BOM), that is covered by AliExpress. The FlashBox case design is published and ready to customize for your own project. That could be used to 3D-print the case. And the hardware wire diagram is there to rebuild the electronics. When you are designing your own PCB, make sure that the +5V, GND, IO0, RX, TX and EN are available. There is also a wiring diagram available if you would like to use a default ESP32 developer board as a target PCB.
 
 ## Technical
 The FlashBox software is build on the 'Serial flasher' component from espressif. This component is a software library for flashing Espressif SoCs from other host microcontroller. Espressif SoCs are normally programmed via serial interface (UART). Port layer for given host microcontroller has to be implemented, if not available.

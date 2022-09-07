@@ -87,10 +87,9 @@ https://www.youtube.com/watch?v=eLmpKKaQL54<br/>
 https://randomnerdtutorials.com/solved-failed-to-connect-to-esp32-timed-out-waiting-for-packet-header<br/>
 
 ## Hardware wire diagram
+![flashbox wire diagram with dev board](https://github.com/Machiel80/esp32-serial-flasher/blob/main/flashbox%20design/doc/flashbox%20wire%20diagram.png?raw=true)<br/>
+Notice that the IO0 is not available on the default pins. The blue wire in the diagram is a shortcut to IO0.<br/>
+
 ![flashbox wire diagram](https://github.com/Machiel80/esp32-serial-flasher/blob/main/flashbox%20design/doc/flashbox%20wire%20diagram%20with%20target.png?raw=true)<br/>
 <br/>
 
-<br/>
-![flashbox wire diagram with dev board](https://github.com/Machiel80/esp32-serial-flasher/blob/main/flashbox%20design/doc/flashbox%20wire%20diagram.png?raw=true)<br/>
-
-Notice that the IO0 is not available on the default pins. The blue wire in the diagram is a shortcut to IO0.<br/>

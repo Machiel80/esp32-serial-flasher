@@ -70,6 +70,7 @@ change (/components/esp-u8g2-hal/include/u8g2_esp32_hal.h) line 27 to 'I2C_MASTE
 ## 3D-Files
 The 3D case design is open-source as well, see folder ‘flashbox design’
 
+![3D design impression](https://github.com/Machiel80/esp32-serial-flasher/blob/main/flashbox%20design/3d%20model/3d-model%20impression.png)
 
 ## Inspiration
 https://github.com/tuanpmt/esp_rpi_flasher<br/>

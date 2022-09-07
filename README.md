@@ -1,6 +1,6 @@
 # Esp32 serial flasher (FlashBox)
 
-![flashbox overview](https://github.com/Machiel80/esp32-serial-flasher/blob/main/flashbox%20design/images/overview%20filled.jpg?raw=true)<br/>
+[![Watch the flashbox video](https://github.com/Machiel80/esp32-serial-flasher/blob/main/flashbox%20design/video/youtube%20button.png)](https://youtu.be/JwLJvGU8xQY)
 
 ## Overview
 The FlashBox is an Esp32 (host) to Esp32 (target) serial flasher. 

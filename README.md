@@ -1,4 +1,4 @@
-# Esp32 serial flasher (FlashBox)
+# FlashBox - Esp32 serial flasher
 
 [![Watch the flashbox video](https://github.com/Machiel80/esp32-serial-flasher/blob/main/flashbox%20design/video/youtube%20button.png)](https://youtu.be/JwLJvGU8xQY)
 

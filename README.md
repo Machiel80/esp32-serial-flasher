@@ -15,7 +15,7 @@ scalable, and gives you the opportunity to outsource the flashing process.
 
 ## Costomize
 
-The software and hardware design of this project is open-source and free to use. Based on your own PCB you need to customize the soft- and hardware to let it fit for your needs. There is a material component list available (BOM), that is covered by AliExpress. The FashBox case design is published and ready to customize for your own project. That could be used to 3D-print the case. And the hardware wire diagram is there to rebuild the electronics. When you are designing your own PCB, make sure that the +5V, GND, IO0, RX, TX and EN are available. There is also a wiring diagram available if you would like to use a default ESP32 developer board as a target PCB.
+The software and hardware design of this project is open-source and free to use. Based on your own PCB you need to customize the soft- and hardware to let it fit for your needs. There is a material component list available (BOM), that is covered by AliExpress. The FlashBox case design is published and ready to customize for your own project. That could be used to 3D-print the case. And the hardware wire diagram is there to rebuild the electronics. When you are designing your own PCB, make sure that the +5V, GND, IO0, RX, TX and EN are available. There is also a wiring diagram available if you would like to use a default ESP32 developer board as a target PCB.
 
 ## Technical
 The FlashBox software is build on the 'Serial flasher' component from espressif. This component is a software library for flashing Espressif SoCs from other host microcontroller. Espressif SoCs are normally programmed via serial interface (UART). Port layer for given host microcontroller has to be implemented, if not available.
@@ -39,7 +39,7 @@ Following steps are performed in order to re-program target's memory:
    See 'sourcecode example target/blink_example.zip' for an implementation example.
 2. Add the same version number from the previous step and change the TARGET_SOFTWARE_VERSION in 'main/main.h'
 3. Compile the target firmware and place the .bin files in the 'firmware_target/bin' directory
-4. Update the filenames in the 'firmware_target/firmware_target.c' file.<br/>
+4. Update the filenames in the 'main/main.h' file.<br/>
    The partition, boot, ota and application filenames should match with the names of your bin files ('firmware_target/bin' directory).<br/>
    Tip: look into the 'build/binaries.c' for the correct spelling of the names.<br/>
    Tip: nevert start a bin filename with a number
@@ -70,6 +70,7 @@ change (/components/esp-u8g2-hal/include/u8g2_esp32_hal.h) line 27 to 'I2C_MASTE
 ## 3D-Files
 The 3D case design is open-source as well, see folder ‘flashbox design’
 
+![3D design impression](https://github.com/Machiel80/esp32-serial-flasher/blob/main/flashbox%20design/3d%20model/3d-model%20impression.png)
 
 ## Inspiration
 https://github.com/tuanpmt/esp_rpi_flasher<br/>

@@ -13,9 +13,12 @@ This FashBox project is meant to making the flashing process straightforward as 
 reliable (green LED will turn-on when software is verified) and finally the process is scalable. Scalable because, a FlashBox can operate independently from a computer and is cheap to build, a rough estimation of the out-of-pocket cost is around 30 dollars [^1]. Building more than one FlashBox makes the project 
 scalable, and gives you the opportunity to outsource the flashing process.
 
+## Costomize
+
+The software and hardware design of this project is open-source and free to use. Based on your own PCB you need to customize the soft- and hardware to let it fit for your needs. There is a material component list available (BOM), that is covered by AliExpress. The FashBox case design is published and ready to customize for your own project. That could be used to 3D-print the case. And the hardware wire diagram is there to rebuild the electronics. When you are designing your own PCB, make sure that the +5V, GND, IO0, RX, TX and EN are available. There is also a wiring diagram available if you would like to use a default ESP32 developer board as a target PCB.
+
 ## Technical
-The FlashBox software is build on the 'Serial flasher' component from espressif. This component is a software library for flashing Espressif SoCs from other host microcontroller. 
-Espressif SoCs are normally programmed via serial interface (UART). Port layer for given host microcontroller has to be implemented, if not available.
+The FlashBox software is build on the 'Serial flasher' component from espressif. This component is a software library for flashing Espressif SoCs from other host microcontroller. Espressif SoCs are normally programmed via serial interface (UART). Port layer for given host microcontroller has to be implemented, if not available.
 
 Your own ESP32 binary must be placed in the `firmware_target` directory and will be converted into C-array during the build process.
 
@@ -28,7 +31,7 @@ Following steps are performed in order to re-program target's memory:
 5. Then `esp_loader_flash_start()` is called to enter flashing mode and erase amount of memory to be flashed.
 6. `esp_loader_flash_write()` function is called repeatedly until the whole binary image is transfered.
 
-[^1]: See 'flashbox design/components/flashbox component list.xlsx'
+[^1]: See 'flashbox design/components/BOM.xlsx'
 
 ## Target firmware preparation in outline
 
@@ -53,7 +56,7 @@ Table below shows connection between the FlashBox host and thet target ESP32 dev
 |    IO25      |      RX0      |
 
 
-## Installation history, dont's execute this is just for the record
+## Installation history
 mkdir components<br/>
 cd components<br/>
 git clone https://github.com/espressif/esp-serial-flasher.git<br/>
@@ -63,6 +66,10 @@ git clone https://github.com/mdvorak/esp-u8g2-hal.git<br/>
 <br/>
 change (/components/esp32-button/src/button.c) line 132 to 'debounce[idx].inverted = false;'<br/>
 change (/components/esp-u8g2-hal/include/u8g2_esp32_hal.h) line 27 to 'I2C_MASTER_FREQ_HZ 250000'<br/>
+
+## 3D-Files
+The 3D case design is open-source as well, see folder ‘flashbox design’
+
 
 ## Inspiration
 https://github.com/tuanpmt/esp_rpi_flasher<br/>
@@ -82,5 +89,8 @@ https://randomnerdtutorials.com/solved-failed-to-connect-to-esp32-timed-out-wait
 ## Hardware wire diagram
 ![flashbox wire diagram](https://github.com/Machiel80/esp32-serial-flasher/blob/main/flashbox%20design/doc/flashbox%20wire%20diagram%20with%20target.png?raw=true)<br/>
 <br/>
-![flashbox wire diagram with dev board](https://github.com/Machiel80/esp32-serial-flasher/blob/main/flashbox%20design/doc/flashbox%20wire%20diagram.png?raw=true)<br/>
+
 <br/>
+![flashbox wire diagram with dev board](https://github.com/Machiel80/esp32-serial-flasher/blob/main/flashbox%20design/doc/flashbox%20wire%20diagram.png?raw=true)<br/>
+
+Notice that the IO0 is not available on the default pins. The blue wire in the diagram is a shortcut to IO0.<br/>

@@ -11,7 +11,7 @@ This concept is especially useful when you need to produce a small quantity of P
 <br/>
 This FashBox project is meant to making the flashing process straightforward as well. It makes the flash job quick, easy to execute (press the button), 
 reliable (green LED will burn when software is verified) and finally the process scalable. Scalable, a FlashBox can operate independently from a computer and is cheap to build, a rough 
-estimation of the out-of-pocket cost is around 0 dollars [^1]. That makes the FlashBox scalable, build more of them, when you want to outsource the flashing process.
+estimation of the out-of-pocket cost is around 30 dollars [^1]. That makes the FlashBox scalable, build more of them, when you want to outsource the flashing process.
 
 ## Technical
 The FlashBox software is build on the 'Serial flasher' component from espressif. This component is a software library for flashing Espressif SoCs from other host microcontroller. 

@@ -10,8 +10,8 @@ This concept is especially useful when you need to produce a small quantity of P
 (less than 1000 pcs) it’s made without your embedded software on the PCB. It's up to you how to get your software into the ESP32 chip.<br/>
 <br/>
 This FashBox project is meant to making the flashing process straightforward as well. It makes the flash job quick, easy to execute (press the button), 
-reliable (green LED will burn when software is verified) and finally the process scalable. Scalable, a FlashBox can operate independently from a computer and is cheap to build, a rough 
-estimation of the out-of-pocket cost is around 0 dollars [^1]. That makes the FlashBox scalable, build more of them, when you want to outsource the flashing process.
+reliable (green LED will turn-on when software is verified) and finally the process is scalable. Scalable because, a FlashBox can operate independently from a computer and is cheap to build, a rough estimation of the out-of-pocket cost is around 30 dollars [^1]. Building more than one FlashBox makes the project 
+scalable, and gives you the opportunity to outsource the flashing process.
 
 ## Technical
 The FlashBox software is build on the 'Serial flasher' component from espressif. This component is a software library for flashing Espressif SoCs from other host microcontroller. 
@@ -65,6 +65,8 @@ change (/components/esp32-button/src/button.c) line 132 to 'debounce[idx].invert
 change (/components/esp-u8g2-hal/include/u8g2_esp32_hal.h) line 27 to 'I2C_MASTER_FREQ_HZ 250000'<br/>
 
 ## Inspiration
+https://github.com/tuanpmt/esp_rpi_flasher<br/>
+https://www.youtube.com/watch?v=gd818KGObi0<br/>
 https://eprotutorials.com/esp32-gpio-tutorial/<br/>
 https://github.com/espressif/esp-serial-flasher<br/>
 http://www.lucadentella.it/en/2017/10/30/esp32-25-display-oled-con-u8g2<br/>

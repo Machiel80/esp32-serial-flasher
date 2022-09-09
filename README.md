@@ -15,7 +15,7 @@ scalable, and gives you the opportunity to outsource the flashing process.
 
 ## Costomize
 
-The software and hardware design of this project is open-source and free to use. Based on your own PCB you need to customize the soft- and hardware to let it fit for your needs. There is a material component list available (BOM), that is covered by AliExpress. The FlashBox case design is published and ready to customize for your own project. That could be used to 3D-print the case. And the hardware wire diagram is there to rebuild the electronics. When you are designing your own PCB, make sure that the +5V, GND, IO0, RX, TX and EN are available. There is also a wiring diagram available if you would like to use a default ESP32 developer board as a target PCB.
+The software and hardware design of this project is open-source and free to use. Based on your own PCB you need to customize the soft- and hardware to let it fit for your needs. There is a material component list available (BOM), that is covered by AliExpress. The FlashBox case design is published and ready to customize for your own project. That could be used to 3D-print the case. And the hardware wire diagram is there to rebuild the electronics. When you are designing your own PCB, make sure that the +5V, GND, IO0, RX, TX and EN are available. There is also a wiring diagram available if you would like to use a default ESP32 developer board, the same that is used inside the FlashBox, as a target PCB.
 
 ## Technical
 The FlashBox software is build on the 'Serial flasher' component from espressif. This component is a software library for flashing Espressif SoCs from other host microcontroller. Espressif SoCs are normally programmed via serial interface (UART). Port layer for given host microcontroller has to be implemented, if not available.
@@ -92,5 +92,6 @@ https://randomnerdtutorials.com/solved-failed-to-connect-to-esp32-timed-out-wait
 Notice that the IO0 is not available on the default pins. The blue wire in the diagram is a shortcut to IO0.<br/>
 
 ![flashbox wire diagram](https://github.com/Machiel80/esp32-serial-flasher/blob/main/flashbox%20design/doc/flashbox%20wire%20diagram%20with%20target.png?raw=true)<br/>
+Notice the 10 uF electrolytic capacitor between the EN pin and GND that's used to get the ESP32 into flashing/uploading mode automatically when uploading a new code.<br/>
 <br/>
 

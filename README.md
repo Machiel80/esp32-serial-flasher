@@ -9,13 +9,11 @@ This concept is especially useful when you need to produce a small quantity of P
 (for example with EasyEDA.com) and producing (for example from jlcpcb.com) PCB’s is relative straightforward. But in small quantities 
 (less than 1000 pcs) it’s made without your embedded software on the PCB. It's up to you how to get your software into the ESP32 chip.<br/>
 <br/>
-This FashBox project is meant to making the flashing process straightforward as well. It makes the flash job quick, easy to execute (press the button), 
-reliable (green LED will turn-on when software is verified) and finally the process is scalable. Scalable because, a FlashBox can operate independently from a computer and is cheap to build, a rough estimation of the out-of-pocket cost is around 30 dollars [^1]. Building more than one FlashBox makes the project 
-scalable, and gives you the opportunity to outsource the flashing process.
+This FashBox project is meant to making the flashing process straightforward as well, see the video for a quick demonstration. It makes the flash process quick, easy to execute (press the button), reliable (green LED will turn-on when software is verified) and finally the process is scalable. Scalable because, a FlashBox can operate independently from a computer and is cheap to build, a rough estimation of the out-of-pocket cost is around 30 dollars [^1]. Building more than one FlashBox makes the project scalable and gives you the opportunity to outsource the flashing process.
 
 ## Costomize
 
-The software and hardware design of this project is open-source and free to use. Based on your own PCB you need to customize the soft- and hardware to let it fit for your needs. There is a material component list available (BOM), that is covered by AliExpress. The FlashBox case design is published and ready to customize for your own project. That could be used to 3D-print the case. And the hardware wire diagram is there to rebuild the electronics. When you are designing your own PCB, make sure that the +5V, GND, IO0, RX, TX and EN are available. There is also a wiring diagram available if you would like to use a default ESP32 developer board, the same that is used inside the FlashBox, as a target PCB.
+The software and hardware design of this project is open-source and free to use. Based on your own PCB you need to customize the soft- and hardware to let it fit for your needs. The FlashBox case and lid are 3D printed. These design files are published and ready to customize for your own case. Furthermore, there’s a bill of material (BOM) available with all the electronic components that is used to build the FlashBox. All those components, like display and buttons, are covered by a AliExpress link. For the wiring of the components there’s a hardware wire diagram available to assemble the electronics circuit. When you are designing your own target PCB, make sure that the +5V, GND, IO0, RX, TX and EN are available. For those who would like to use the default ESP32 developer board as target PCB, (the same that is used inside the FlashBox) there is a second wire diagram available.
 
 ## Technical
 The FlashBox software is build on the 'Serial flasher' component from espressif. This component is a software library for flashing Espressif SoCs from other host microcontroller. Espressif SoCs are normally programmed via serial interface (UART). Port layer for given host microcontroller has to be implemented, if not available.
@@ -36,13 +34,13 @@ Following steps are performed in order to re-program target's memory:
 ## Target firmware preparation in outline
 
 1. Add a UART 'version' command to the target firmware that returns the current version.<br/>
-   See 'sourcecode example target/blink_example.zip' for an implementation example.
-2. Add the same version number from the previous step and change the TARGET_SOFTWARE_VERSION in 'main/main.h'
-3. Compile the target firmware and place the .bin files in the 'firmware_target/bin' directory
-4. Update the filenames in the 'main/main.h' file.<br/>
-   The partition, boot, ota and application filenames should match with the names of your bin files ('firmware_target/bin' directory).<br/>
-   Tip: look into the 'build/binaries.c' for the correct spelling of the names.<br/>
-   Tip: nevert start a bin filename with a number
+   See `sourcecode example target` directory for an implementation example.
+2. Compile the target firmware and place the .bin files in the `firmware_target/bin` directory.
+3. Add the version number from step 1 and change the TARGET_SOFTWARE_VERSION in `main/main.h`.
+4. Update the filenames in the `main/main.h` file.<br/>
+   The partition, boot, ota and application filenames should match with the names of your bin files (`firmware_target/bin` directory).<br/>
+   Tip: look into the `build/binaries.c` for the correct spelling of the names.<br/>
+   Tip: nevert start a bin filename with a number.
 5. Compile and flash the FlashBox software
 
 ## Hardware connection
@@ -57,8 +55,6 @@ Table below shows connection between the FlashBox host and thet target ESP32 dev
 
 
 ## Installation history
-mkdir components<br/>
-cd components<br/>
 git clone https://github.com/espressif/esp-serial-flasher.git<br/>
 git clone https://github.com/craftmetrics/esp32-button.git<br/>
 git clone https://github.com/olikraus/u8g2.git<br/>
@@ -68,7 +64,7 @@ change (/components/esp32-button/src/button.c) line 132 to 'debounce[idx].invert
 change (/components/esp-u8g2-hal/include/u8g2_esp32_hal.h) line 27 to 'I2C_MASTER_FREQ_HZ 250000'<br/>
 
 ## 3D-Files
-The 3D case design is open-source as well, see folder ‘flashbox design’
+The 3D case design is open-source, see folder `flashbox design`
 
 ![3D design impression](https://github.com/Machiel80/esp32-serial-flasher/blob/main/flashbox%20design/3d%20model/20220907_FlashBox_right.png)
 

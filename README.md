@@ -31,7 +31,7 @@ Following steps are performed in order to re-program target's memory:
 
 [^1]: See 'flashbox design/components/BOM.xlsx'
 
-## Target firmware preparation in outline
+## Target firmware preparation outline
 
 1. Add a UART 'version' command to the target firmware that returns the current version.<br/>
    See `sourcecode example target` directory for an implementation example.

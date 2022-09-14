@@ -6,21 +6,21 @@
 The FlashBox is an Esp32 (host) to Esp32 (target) serial flasher. 
 
 This concept is especially useful when you need to produce a small quantity of PCB with embedded ESP32 software. The process of designing 
-(for example with EasyEDA.com) and producing (for example from jlcpcb.com) PCB’s is relative straightforward. But in small quantities 
+(for example with EasyEDA.com) and producing (for example from jlcpcb.com) PCB’s is relatively straightforward. But in small quantities 
 (less than 1000 pcs) it’s made without your embedded software on the PCB. It's up to you how to get your software into the ESP32 chip.<br/>
 <br/>
 This FashBox project is meant to making the flashing process straightforward as well, see the video for a quick demonstration. It makes the flash process quick, easy to execute (press the button), reliable (green LED will turn-on when software is verified) and finally the process is scalable. Scalable because, a FlashBox can operate independently from a computer and is cheap to build, a rough estimation of the out-of-pocket cost is around 30 dollars [^1]. Building more than one FlashBox makes the project scalable and gives you the opportunity to outsource the flashing process.
 
 ## Costomize
 
-The software and hardware design of this project is open-source and free to use. Based on your own PCB you need to customize the soft- and hardware to let it fit for your needs. The FlashBox case and lid are 3D printed. These design files are published and ready to customize for your own case. Furthermore, there’s a bill of material (BOM) available with all the electronic components that is used to build the FlashBox. All those components, like display and buttons, are covered by a AliExpress link. For the wiring of the components there’s a hardware wire diagram available to assemble the electronics circuit. When you are designing your own target PCB, make sure that the +5V, GND, IO0, RX, TX and EN are available. For those who would like to use the default ESP32 developer board as target PCB, (the same that is used inside the FlashBox) there is a second wire diagram available.
+The software and hardware design of this project is open-source and free to use. Based on your own PCB you need to customize the soft- and hardware to let it fit for your needs. The FlashBox case and lid are 3D printed. These design files are published and ready to customize for your own case. Furthermore, there’s a bill of material (BOM) available with all the electronic components that is used to build the FlashBox. All those components, like display and buttons, can be found via a AliExpress link. For the wiring of the components there’s a hardware wire diagram available to assemble the electronics circuit. When you are designing your own target PCB, make sure that the +5V, GND, IO0, RX, TX and EN are available. For those who would like to use the default ESP32 developer board as target PCB, (the same that is used inside the FlashBox) there is a second wire diagram available.
 
 ## Technical
 The FlashBox software is build on the 'Serial flasher' component from espressif. This component is a software library for flashing Espressif SoCs from other host microcontroller. Espressif SoCs are normally programmed via serial interface (UART). Port layer for given host microcontroller has to be implemented, if not available.
 
 Your own ESP32 binary must be placed in the `firmware_target` directory and will be converted into C-array during the build process.
 
-Following steps are performed in order to re-program target's memory:
+Following steps are performed in order to re-program the target memory:
 
 1. Filesystem is initialized and mounted.
 2. UART1 through which new binary will be transfered is initialized.

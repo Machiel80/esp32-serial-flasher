@@ -71,6 +71,7 @@ The 3D case design is open-source, see folder `flashbox design`
 ## Inspiration
 https://github.com/tuanpmt/esp_rpi_flasher<br/>
 https://www.youtube.com/watch?v=gd818KGObi0<br/>
+https://www.youtube.com/watch?v=41L3wW0PhGo<br/>
 https://eprotutorials.com/esp32-gpio-tutorial/<br/>
 https://github.com/espressif/esp-serial-flasher<br/>
 http://www.lucadentella.it/en/2017/10/30/esp32-25-display-oled-con-u8g2<br/>
